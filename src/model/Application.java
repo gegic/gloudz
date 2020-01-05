@@ -25,6 +25,8 @@ public class Application {
       users.add(new User("a@a", "adminadmin", "Admin", "Admin", UserRole.superAdmin));
       organizations = new ArrayList<>();
       categories = new ArrayList<>();
+      categories.add(new VMCategory("Cat1", 4, 16, 2));
+
       machines = new ArrayList<>();
    }
 

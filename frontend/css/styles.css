@@ -105,3 +105,54 @@ body {
   font-size: 12px;
   color: #999;
 }
+
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  /*-webkit-transition: margin .25s ease-out;*/
+  /*-moz-transition: margin .25s ease-out;*/
+  /*-o-transition: margin .25s ease-out;*/
+  position: fixed;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+
+#page-wrapper{
+  margin-left: 15rem;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+.home-bg {
+  background-color: white;
+}
+
+.clickable-card{
+  user-select: none;
+  box-shadow: 0 0 13px -8px rgba(0,0,0,0.61);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.clickable-card:hover {
+
+  cursor: pointer;
+  box-shadow: 0 0 20px -8px rgba(0,0,0,0.61);
+
+}
+
+.clickable-card .text-muted{
+  transition: opacity 0.1s ease-in-out;
+  opacity: 0;
+}
+
+.clickable-card:hover .text-muted{
+  opacity: 100%;
+}

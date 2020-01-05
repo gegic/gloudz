@@ -8,7 +8,7 @@ const router = new VueRouter(
         routes: [
             {
                 path: '/',
-                component: {template: '<h1>LOGGED</h1>'},
+                component: {template: '<vms></vms>'},
                 meta: {
                     public: false,  // Allow access to even if not logged in
                     whenLoggedOut: false
@@ -20,6 +20,14 @@ const router = new VueRouter(
                 meta: {
                     public: true,  // Allow access to even if not logged in
                     whenLoggedOut: true
+                }
+            },
+            {
+                path: '/categories',
+                component: {template: '<categories></categories>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
                 }
             }
 

@@ -50,6 +50,8 @@ public class App {
 			req.session().invalidate();
 			return "";
 		});
+		
+		get("/rest/categories", (req, res) -> g.toJson(application.getCategories()));
 
 	}
 
