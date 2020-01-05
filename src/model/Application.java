@@ -136,5 +136,55 @@ public class Application {
       if (organizations != null)
          organizations.clear();
    }
+   
+      public boolean hasCategory(String name){
+      return getCategory(name) != null;
+   }
+
+   public void addCategory(VMCategory cat) {
+      if (cat == null)
+         return;
+      if (this.categories == null)
+         this.categories = new ArrayList<>();
+      if (!this.categories.contains(cat))
+         this.categories.add(cat);
+   }
+
+   public VMCategory getCategory(String name){
+      for(VMCategory c : categories){
+         if(c.getName().equalsIgnoreCase(name))
+            return c;
+      }
+      return null;
+   }
+
+   public boolean hasCategoryExcept(String name, String except){
+      for(VMCategory c : categories){
+         if(!c.getName().equalsIgnoreCase(except) && c.getName().equalsIgnoreCase(name)){
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public boolean setCategory(String name, VMCategory other){
+      VMCategory cat = getCategory(name);
+      if(cat == null){
+         return false;
+      }
+      cat.setProperties(other);
+      return true;
+   }
+
+   public boolean removeCategory(String name){
+      VMCategory cat = getCategory(name);
+      if(cat == null) return false;
+      for(VirtualMachine vm : machines){
+         if(vm.getCategory().equals(cat))
+            return false;
+      }
+      categories.remove(cat);
+      return true;
+   }
 
 }

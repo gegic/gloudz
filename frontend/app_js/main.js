@@ -23,13 +23,29 @@ const router = new VueRouter(
                 }
             },
             {
+                path: '/logout',
+                component: {template: '<logout></logout>'},
+                meta: {
+                    public: true,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
                 path: '/categories',
                 component: {template: '<categories></categories>'},
                 meta: {
                     public: false,  // Allow access to even if not logged in
                     whenLoggedOut: false
                 }
-            }
+            },
+            {
+                path: '/category/:name',
+                component: {template: '<category :name="$route.params.name"></category>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
 
         ]
     }

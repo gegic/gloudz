@@ -3,6 +3,7 @@ import static spark.Spark.externalStaticFileLocation;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.delete;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import com.google.gson.Gson;
 
 import model.Application;
 import model.User;
+import model.VMCategory;
 
 public class App {
 
@@ -52,7 +54,53 @@ public class App {
 		});
 		
 		get("/rest/categories", (req, res) -> g.toJson(application.getCategories()));
+		
+				post("/rest/category", (req, res) -> {
+			VMCategory cat = g.fromJson(req.body(), VMCategory.class);
+			if(application.hasCategory(cat.getName())){
+				res.status(400);
+				return "";
+			}
+
+			application.addCategory(cat);
+			
+			return "";
+		});
+
+		get("/rest/category/:name", (req, res) -> g.toJson(application.getCategory(req.params("name"))));
+
+		post("/rest/category/:name", (req, res) -> {
+			VMCategory edited = g.fromJson(req.body(), VMCategory.class);
+			if(application.hasCategoryExcept(edited.getName(), req.params("name"))){
+				res.status(400);
+				return "";
+			}
+			if(!application.setCategory(req.params("name"), edited)) {
+				res.status(400);
+				return "";
+			}
+			
+			return g.toJson(new ReturnJSON(edited.getName()));
+		});
+
+		delete("/rest/category/:name", (req, res) -> {
+			if(!application.removeCategory(req.params("name"))){
+				res.status(400);
+				return "";
+			}
+			
+			return "";
+		});
 
 	}
+	
+	private static class ReturnJSON{
+		private String location;
+
+		public ReturnJSON(String location) {
+			this.location = location;
+		}
+	}
+
 
 }

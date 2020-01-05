@@ -156,3 +156,32 @@ body {
 .clickable-card:hover .text-muted{
   opacity: 100%;
 }
+
+.mymodal{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+  display: inline-block;
+  alignment: center;
+  z-index: 100;
+}
+
+.add-button{
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  z-index: 10;
+}
+
+
+.delete-button {
+  position: fixed;
+  bottom: 3rem;
+  right: 9rem;
+  z-index: 10;
+}
