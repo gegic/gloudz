@@ -160,6 +160,56 @@ public class App {
 			return g.toJson(new ReturnJSON(found.getName()));
 
 		});
+		
+		get("/rest/users", (req, res) -> g.toJson(application.getUsers()));
+
+		get("/rest/users/:orgName", (req, res) -> {
+			Organization org = application.getOrganizationName(req.params("orgName"));
+			return g.toJson(org.getUsers());
+		});
+
+
+		post("/rest/user", (req, res) -> {
+			User added = g.fromJson(req.body(), User.class);
+			if(application.hasUser(added.getEmail())){
+				res.status(400);
+				return "";
+			}
+			application.addUsers(added);
+
+			return "";
+		});
+
+		get("/rest/user/:email", (req, res) -> g.toJson(application.getUser(req.params("email"))));
+
+		post("/rest/user/:email", (req, res) -> {
+
+
+			User newUser = g.fromJson(req.body(), User.class);
+			if(application.hasUserExcept(req.params("email"), newUser.getEmail())){
+				res.status(400);
+				return "";
+			}
+			boolean ret = application.setUser(req.params("email"), newUser);
+			if(!ret){
+				res.status(400);
+				return "";
+			}
+
+			return g.toJson(new ReturnJSON(newUser.getEmail()));
+		});
+
+		delete("/rest/user/:email", (req, res) -> {
+			if(req.params("email").equalsIgnoreCase(((User) req.session().attribute("logged")).getEmail())){
+				res.status(400);
+				return "";
+			}
+			if(application.removeUser(req.params("email")))
+				res.status(200);
+			else res.status(400);
+
+			return "";
+		});
 
 	}
 	

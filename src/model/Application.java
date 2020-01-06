@@ -83,6 +83,48 @@ public class Application {
       if (users != null)
          users.clear();
    }
+   
+     public boolean hasUser(String email){
+      return getUser(email) != null;
+   }
+
+   public boolean hasUserExcept(String email, String except){
+      for(User u : users){
+         if(!u.getEmail().equalsIgnoreCase(except) && u.getEmail().equalsIgnoreCase(email)){
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public User getUser(String email){
+      for(User u : users){
+         if(u.getEmail().equalsIgnoreCase(email)){
+            return u;
+         }
+      }
+      return null;
+   }
+   public boolean setUser(String email, User newUser){
+      for(User u : users){
+         if(u.getEmail().equalsIgnoreCase(email)){
+            u.setProperties(newUser);
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public boolean removeUser(String email){
+      User removed = getUser(email);
+      if(removed == null)
+         return false;
+      removed.setOrganization(null);
+
+      users.remove(removed);
+      return true;
+   }
+   
    public List<Organization> getOrganizations() {
       if (organizations == null)
          organizations = new ArrayList<Organization>();

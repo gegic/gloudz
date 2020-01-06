@@ -62,6 +62,21 @@ const router = new VueRouter(
                     whenLoggedOut: false
                 }
             },
+            {
+                path: '/users',
+                component: {template: '<users></users>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },{
+                path: '/user/:email',
+                component: {template: '<user :email="$route.params.email"></user>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
 
         ]
     }
