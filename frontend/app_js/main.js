@@ -46,6 +46,22 @@ const router = new VueRouter(
                     whenLoggedOut: false
                 }
             },
+            {
+                path: '/organizations',
+                component: {template: '<organizations></organizations>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
+                path: '/organization/:name',
+                component: {template: '<organization :name="$route.params.name"></organization>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
 
         ]
     }

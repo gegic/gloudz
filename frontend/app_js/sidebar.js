@@ -17,8 +17,9 @@ Vue.component("sidebar", {
       <div class="sidebar-heading">GloudZ</div>
       <div class="list-group list-group-flush">
         <router-link to="/" class="list-group-item list-group-item-action" v-bind:class="{active:activeTab=='vm'}">Virtual Machines</router-link>
-        <router-link to="/categories" class="list-group-item list-group-item-action" v-bind:class="{active:activeTab=='categories'}">VM Categories</router-link>
-
+        <router-link v-if="activeUser && activeUser.role == 'superAdmin'" to="/organizations" class="list-group-item list-group-item-action" v-bind:class="{active:activeTab=='organizations'}">Organizations</router-link>
+        <router-link v-if="activeUser && activeUser.role == 'admin' && activeUser.organization" :to="'/organization/' + activeUser.organization.name" class="list-group-item list-group-item-action" v-bind:class="{active:activeTab=='organizations'}">Organizations</router-link>
+		<router-link to="/categories" class="list-group-item list-group-item-action" v-bind:class="{active:activeTab=='categories'}">VM Categories</router-link>
         <router-link to="/logout" class="list-group-item list-group-item-action">Logout</router-link>
       </div>
     </div>

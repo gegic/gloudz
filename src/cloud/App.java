@@ -6,13 +6,22 @@ import static spark.Spark.post;
 import static spark.Spark.delete;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Scanner;
+
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
 
 import model.Application;
+import model.Organization;
 import model.User;
 import model.VMCategory;
+import spark.utils.IOUtils;
 
 public class App {
 
@@ -91,7 +100,85 @@ public class App {
 			
 			return "";
 		});
+		
+		get("/rest/organizations", (req, res) -> g.toJson(application.getOrganizations()));
 
+		post("/rest/organization", (req, res) -> {
+			req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+			Part filePart = req.raw().getPart("logo");
+			String desc = new Scanner(req.raw().getPart("desc").getInputStream()).useDelimiter("\\A").next();
+			String name = new Scanner(req.raw().getPart("name").getInputStream()).useDelimiter("\\A").next();
+			if(application.hasOrg(name)){
+				res.status(400);
+				return "";
+			}
+			String savedPath = savePhoto(filePart, name);
+
+			if(savedPath == null){
+				res.status(400);
+				return "";
+			}
+
+			if(!application.addOrganizations(new Organization(name, desc, savedPath))){
+				res.status(400);
+				return "";
+			}
+			System.out.println("UBACEN");
+
+			res.status(201);
+			return "";
+		});
+
+		get("/rest/organization/:name", (req, res) -> g.toJson(application.getOrganizationName(req.params("name"))));
+
+		post("/rest/organization/:name", (req, res) -> {
+			Organization found = application.getOrganizationName(req.params("name"));
+			if (found == null){
+				res.status(400);
+				return "";
+			}
+			req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+			Part filePart = req.raw().getPart("logo");
+			String desc = new Scanner(req.raw().getPart("desc").getInputStream()).useDelimiter("\\A").next();
+			String name = new Scanner(req.raw().getPart("name").getInputStream()).useDelimiter("\\A").next();
+
+			if(application.hasOrgExcept(name, found.getName())){
+				res.status(400);
+				return "";
+			}
+			String path = found.getLogoPath();
+
+			if(filePart.getSize() != 0){
+				path = savePhoto(filePart, name);
+			}
+
+			found.setName(name);
+			found.setDescription(desc);
+			found.setLogoPath(path);
+
+			res.status(200);
+			return g.toJson(new ReturnJSON(found.getName()));
+
+		});
+
+	}
+	
+	
+	private static String savePhoto(Part filePart, String name){
+		try (InputStream inputStream = filePart.getInputStream()) {
+			String extension = filePart.getSubmittedFileName().substring(filePart.getSubmittedFileName().lastIndexOf('.'));
+			String shorterPath = "data/organization_logos/" + name.toLowerCase() + extension;
+			String path = "frontend/" + shorterPath;
+			File f = new File(path);
+			f.createNewFile();
+			OutputStream outputStream = new FileOutputStream(f);
+			IOUtils.copy(inputStream, outputStream);
+			outputStream.close();
+			return shorterPath;
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private static class ReturnJSON{

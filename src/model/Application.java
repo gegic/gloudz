@@ -175,6 +175,7 @@ public class Application {
       cat.setProperties(other);
       return true;
    }
+  
 
    public boolean removeCategory(String name){
       VMCategory cat = getCategory(name);
@@ -185,6 +186,26 @@ public class Application {
       }
       categories.remove(cat);
       return true;
+   }
+    
+   public boolean hasOrg(String name){
+      return getOrganizationName(name) != null;
+   }
+
+   public boolean hasOrgExcept(String name, String except){
+      for(Organization o : organizations){
+         if(!o.getName().equalsIgnoreCase(except) && o.getName().equalsIgnoreCase(name))
+            return true;
+      }
+      return false;
+   }
+
+   public Organization getOrganizationName(String name){
+      for(Organization o : organizations){
+         if(o.getName().equalsIgnoreCase(name))
+            return o;
+      }
+      return null;
    }
 
 }

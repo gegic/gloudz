@@ -157,6 +157,13 @@ body {
   opacity: 100%;
 }
 
+
+.logo{
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
 .mymodal{
   position: fixed;
   top: 0;
