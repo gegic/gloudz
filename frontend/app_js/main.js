@@ -77,7 +77,14 @@ const router = new VueRouter(
                     whenLoggedOut: false
                 }
             },
-
+            {
+                path: '/vm/:orgName/:vmName',
+                component: {template: '<vm :orgName="$route.params.orgName" :vmName="$route.params.vmName"></vm>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            }
         ]
     }
 );

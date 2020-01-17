@@ -53,4 +53,8 @@ public class Activity {
       this.startingDate = startingDate;
       this.endingDate = null;
    }
+   
+   public void setOVM(VirtualMachine vm){
+      this.virtualMachine = vm;
+   }
 }

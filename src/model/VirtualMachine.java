@@ -12,8 +12,8 @@ import java.util.List;
 public class VirtualMachine {
    private String name;
    private VMCategory category;
-   private List<Drive> drives;
-   private List<Activity> activities;
+   private List<Drive> drives = new ArrayList<>();
+   private List<Activity> activities = new ArrayList<>();
    private Activity ongoingActivity;
 
    public Activity getOngoingActivity() {
@@ -140,5 +140,27 @@ public class VirtualMachine {
          activities = new ArrayList<Activity>();
       return activities;
    }
-
+   public void setProperties(VirtualMachine newVM){
+      this.name = newVM.getName();
+      this.category = newVM.getCategory();
+      this.setActivities(newVM.getActivities());
+      this.setDrives(newVM.getDrives());
+      this.ongoingActivity = newVM.getOngoingActivity();
+   }
+   
+   public void setActivities(List<Activity> newActivity) {
+      removeAllActivity();
+      for (Activity a : newActivity) {
+         activities.add(a);
+         a.setOVM(this);
+      }
+   }
+   
+   public void setDrives(List<Drive> newDrive) {
+      removeAllDrive();
+      for (Drive d : drives) {
+         drives.add(d);
+         d.setOVM(this);
+      }
+   }
 }

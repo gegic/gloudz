@@ -10,17 +10,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import deserializers.DateSerializer;
+import deserializers.VirtualMachineDeserializer;
 import model.Application;
 import model.Organization;
 import model.User;
 import model.VMCategory;
+import model.VirtualMachine;
 import spark.utils.IOUtils;
 
 public class App {
@@ -38,7 +44,10 @@ public class App {
 
 		application = Application.getInstance();
 		
-		g = new Gson();
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(VirtualMachine.class, new VirtualMachineDeserializer());
+		gsonBuilder.registerTypeAdapter(LocalDate.class, new DateSerializer());
+		g = gsonBuilder.create();
 
 		post("/rest/login", (req, res) ->{
 			System.out.println(req.body());
@@ -210,6 +219,56 @@ public class App {
 
 			return "";
 		});
+		
+		get("/rest/vms", (req, res) -> g.toJson(application.getMachines()));
+
+		post("/rest/vm", (req, res) -> {
+			System.out.println(req.body());
+			OrgRequest<VirtualMachine, Organization> vmr = g.fromJson(req.body(), new TypeToken<OrgRequest<VirtualMachine, Organization>>(){}.getType());
+			Organization org = vmr.getSecond();
+			VirtualMachine added = vmr.getFirst();
+			if(application.hasMachine(added.getName())){
+				res.status(400);
+				return "";
+			}
+			application.addMachine(added, org);
+			return "";
+		});
+
+		get("/rest/vm/:orgName/:vmName", (req, res) -> g.toJson(
+				new OrgRequest<>(
+							  application.getMachine(req.params("vmName")),
+							  application.getOrganizationName(req.params("orgName")))));
+
+		post("/rest/vm/:orgName/:vmName", (req, res) -> {
+			System.out.println(req.body());
+			VirtualMachine newMachine = g.fromJson(req.body(), VirtualMachine.class);
+			if(application.hasMachineExcept(newMachine.getName(), req.params("vmName"))){
+				res.status(400);
+				return "";
+			}
+			boolean ret = application.setMachine(req.params("vmName"), newMachine);
+			if(!ret){
+				res.status(400);
+				return "";
+			}
+			return g.toJson(new ReturnJSON(req.params("orgName") + "/" + newMachine.getName()));
+		});
+
+		delete("/rest/vm/:orgName/:vmName", (req, res) -> {
+			if(!application.hasMachine(req.params("vmName"))){
+				res.status(400);
+				return "";
+			}
+			if(!application.hasOrg(req.params("orgName"))){
+				res.status(400);
+				return "";
+			}
+			if(application.removeMachine(req.params("vmName"), req.params("orgName")))
+				res.status(200);
+			else res.status(400);
+			return "";
+		});
 
 	}
 	
@@ -239,5 +298,21 @@ public class App {
 		}
 	}
 
+	private static class OrgRequest<First, Second> {
+		private Second second;
+		private First first;
 
+		public OrgRequest(First t, Second r) {
+			this.second = r;
+			this.first = t;
+		}
+
+		public Second getSecond() {
+			return second;
+		}
+
+		public First getFirst() {
+			return first;
+		}
+	}
 }

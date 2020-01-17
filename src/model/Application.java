@@ -249,5 +249,60 @@ public class Application {
       }
       return null;
    }
+   
+   public boolean hasMachine(String name){
+	      return getMachine(name) != null;
+	   }
+
+	   public VirtualMachine getMachine(String name){
+	      for(VirtualMachine m : machines){
+	         if(m.getName().equalsIgnoreCase(name)){
+	            return m;
+	         }
+	      }
+	      return null;
+	   }
+
+	   public void addMachine(VirtualMachine machine, Organization org){
+
+	      if (machine == null)
+	         return;
+	      if (this.machines == null)
+	         this.machines = new ArrayList<>();
+	      if (!this.machines.contains(machine)) {
+	         Organization found = getOrganizationName(org.getName());
+	         this.machines.add(machine);
+	         found.addMachine(machine);
+	      }
+	   }
+
+	   public boolean hasMachineExcept(String name, String except){
+	      for(VirtualMachine m : machines){
+	         if(!m.getName().equalsIgnoreCase(except) && m.getName().equalsIgnoreCase(name)){
+	            return true;
+	         }
+	      }
+	      return false;
+	   }
+
+	   public boolean setMachine(String name, VirtualMachine newMachine){
+	      VirtualMachine old = getMachine(name);
+	      if(old == null)
+	         return false;
+	      old.setProperties(newMachine);
+	      return true;
+	   }
+	   
+	   public boolean removeMachine(String name, String orgName){
+	      VirtualMachine removed = getMachine(name);
+	      if(removed == null)
+	         return false;
+	      removed.removeAllDrive();
+	      removed.removeAllActivity();
+	      machines.remove(removed);
+	      Organization org = getOrganizationName(orgName);
+	      org.removeMachine(removed);
+	      return true;
+	   }
 
 }
