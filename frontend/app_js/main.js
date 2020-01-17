@@ -84,7 +84,15 @@ const router = new VueRouter(
                     public: false,  // Allow access to even if not logged in
                     whenLoggedOut: false
                 }
-            }
+            },
+            {
+                path: '/profile',
+                component: {template: '<profile></profile>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
         ]
     }
 );
