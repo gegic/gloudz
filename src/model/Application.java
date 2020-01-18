@@ -305,4 +305,69 @@ public class Application {
 	      return true;
 	   }
 
+	   public boolean hasDrive(String name){
+		      return getDrive(name) != null;
+		   }
+
+		   public Drive getDrive(String name){
+		      for(Drive m : drives){
+		         if(m.getName().equalsIgnoreCase(name)){
+		            return m;
+		         }
+		      }
+		      return null;
+		   }
+
+		   public void addDrive(Drive drive, VirtualMachine machine, Organization org){
+
+		      if (drive == null)
+		         return;
+		      if (this.drives == null)
+		         this.drives = new ArrayList<>();
+		      if (!this.drives.contains(drive)) {
+		         VirtualMachine vm = null;
+		         if(machine != null)
+		            vm = getMachine(machine.getName());
+		         this.drives.add(drive);
+		         Organization found = getOrganizationName(org.getName());
+		         found.addDrive(drive);
+		         if(vm != null)
+		            vm.addDrive(drive);
+		      }
+		   }
+
+		   public boolean hasDriveExcept(String name, String except){
+		      for(Drive m : drives){
+		         if(!m.getName().equalsIgnoreCase(except) && m.getName().equalsIgnoreCase(name)){
+		            return true;
+		         }
+		      }
+		      return false;
+		   }
+
+		   public boolean setDrive(String name, Drive newDrive, VirtualMachine machine){
+		      Drive old = getDrive(name);
+		      VirtualMachine vm = null;
+		      if(machine != null)
+		         vm = getMachine(machine.getName());
+		      if(old == null)
+		         return false;
+		      old.setProperties(newDrive);
+		      if(vm != null){
+		         vm.addDrive(old);
+		      }
+		      return true;
+		   }
+
+		   public boolean removeDrive(String name, String orgName){
+		      Drive removed = getDrive(name);
+		      if(removed == null)
+		         return false;
+		      removed.setVirtualMachine(null);
+
+		      drives.remove(removed);
+		      Organization org = getOrganizationName(orgName);
+		      org.removeDrive(removed);
+		      return true;
+		   }
 }

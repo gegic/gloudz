@@ -21,8 +21,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import deserializers.DateSerializer;
+import deserializers.OrganizationDeserializer;
+import deserializers.UserDeserializer;
 import deserializers.VirtualMachineDeserializer;
 import model.Application;
+import model.Drive;
 import model.Organization;
 import model.User;
 import model.VMCategory;
@@ -45,8 +48,10 @@ public class App {
 		application = Application.getInstance();
 		
 		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(User.class, new UserDeserializer());
 		gsonBuilder.registerTypeAdapter(VirtualMachine.class, new VirtualMachineDeserializer());
 		gsonBuilder.registerTypeAdapter(LocalDate.class, new DateSerializer());
+		gsonBuilder.registerTypeAdapter(Organization.class, new OrganizationDeserializer());
 		g = gsonBuilder.create();
 
 		post("/rest/login", (req, res) ->{
@@ -270,6 +275,61 @@ public class App {
 			return "";
 		});
 
+		post("/rest/drive", (req, res) -> {
+			OrgRequest<OrgRequest<Drive, VirtualMachine>, Organization> vmr =
+					g.fromJson(req.body(), new TypeToken<OrgRequest<OrgRequest<Drive, VirtualMachine>, Organization>>(){}.getType());
+			Organization org = vmr.getSecond();
+			OrgRequest<Drive, VirtualMachine> added = vmr.getFirst();
+
+			if(application.hasDrive(added.getFirst().getName())){
+				res.status(400);
+				return "";
+			}
+			application.addDrive(added.getFirst(), added.getSecond(), org);
+			return "";
+		});
+
+		get("/rest/drive/:orgName/:driveName", (req, res) -> {
+			Drive d = application.getDrive(req.params("driveName"));
+			System.out.println(req.params("driveName"));
+			return g.toJson(
+				new OrgRequest<>(
+						d,
+						new OrgRequest<>(
+								d.getVirtualMachine(),
+								application.getOrganizationName(req.params("orgName")))));
+		});
+
+		post("/rest/drive/:orgName/:driveName", (req, res) -> {
+			OrgRequest<Drive, VirtualMachine> dvm = g.fromJson(req.body(), new TypeToken<OrgRequest<Drive, VirtualMachine>>(){}.getType());
+			VirtualMachine machine = dvm.getSecond();
+			Drive drive = dvm.getFirst();
+			if(application.hasDriveExcept(drive.getName(), req.params("driveName"))){
+				res.status(400);
+				return "";
+			}
+			boolean ret = application.setDrive(req.params("driveName"), drive, machine);
+			if(!ret){
+				res.status(400);
+				return "";
+			}
+			return g.toJson(new ReturnJSON(req.params("orgName") + "/" + drive.getName()));
+		});
+
+		delete("/rest/drive/:orgName/:driveName", (req, res) -> {
+			if(!application.hasDrive(req.params("driveName"))){
+				res.status(400);
+				return "";
+			}
+			if(!application.hasOrg(req.params("orgName"))){
+				res.status(400);
+				return "";
+			}
+			if(application.removeDrive(req.params("driveName"), req.params("orgName")))
+				res.status(200);
+			else res.status(400);
+			return "";
+		});
 	}
 	
 	

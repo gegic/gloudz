@@ -91,6 +91,8 @@ Vue.component("vm", {
 
         </div>
         <add-vm :activeUser="activeUser" v-if="activeUser && activeUser.role != 'user'" mode="edit" :organization="organization" :preVM="vm" @edit="edited"/>
+        <show-drives :activeUser="activeUser" :organization="organization" :preVM="vm" @edit="edited"></show-drives>
+        <show-activities :activeUser="activeUser" :organization="organization" :preVM="vm" @edit="edited"/>
         <delete-vm v-if="activeUser && activeUser.role != 'user'" :vm="vm" :organization="organization"/>
     </div>
     

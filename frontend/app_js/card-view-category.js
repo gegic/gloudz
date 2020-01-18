@@ -13,6 +13,8 @@ Vue.component("card-view-category", {
     template: `
 <div class="card mb-3 ml-3 mr-3 clickable-card" v-on:click="pushToCategory">
   <div class="row no-gutters">
+<!--    <div class="col-md-2">-->
+<!--    </div>-->
     <div class="col-ld-3">
       <div class="card-body">
         <h5 class="card-title">{{ category.name }}</h5>

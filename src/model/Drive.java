@@ -76,8 +76,10 @@ public class Drive {
       this.type = newDrive.getType();
       this.setVirtualMachine(newDrive.getVirtualMachine());
    }
+
    public void setOVM(VirtualMachine vm){
       this.virtualMachine = vm;
    }
+
 
 }

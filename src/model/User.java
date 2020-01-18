@@ -5,6 +5,16 @@
  ***********************************************************************/
 package model;
 
+import cloud.App;
+import com.google.gson.*;
+import com.google.gson.annotations.Expose;
+
+import javax.management.relation.Role;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class User{
     private String email;
     private String firstName;

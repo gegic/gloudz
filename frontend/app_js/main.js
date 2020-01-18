@@ -31,6 +31,54 @@ const router = new VueRouter(
                 }
             },
             {
+                path: '/organizations',
+                component: {template: '<organizations></organizations>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
+                path: '/users',
+                component: {template: '<users></users>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
+                path: '/profile',
+                component: {template: '<profile></profile>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
+                path: '/drives',
+                component: {template: '<drives></drives>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
+                path: '/organization/:name',
+                component: {template: '<organization :name="$route.params.name"></organization>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
+                path: '/user/:email',
+                component: {template: '<user :email="$route.params.email"></user>'},
+                meta: {
+                    public: false,  // Allow access to even if not logged in
+                    whenLoggedOut: false
+                }
+            },
+            {
                 path: '/categories',
                 component: {template: '<categories></categories>'},
                 meta: {
@@ -47,37 +95,6 @@ const router = new VueRouter(
                 }
             },
             {
-                path: '/organizations',
-                component: {template: '<organizations></organizations>'},
-                meta: {
-                    public: false,  // Allow access to even if not logged in
-                    whenLoggedOut: false
-                }
-            },
-            {
-                path: '/organization/:name',
-                component: {template: '<organization :name="$route.params.name"></organization>'},
-                meta: {
-                    public: false,  // Allow access to even if not logged in
-                    whenLoggedOut: false
-                }
-            },
-            {
-                path: '/users',
-                component: {template: '<users></users>'},
-                meta: {
-                    public: false,  // Allow access to even if not logged in
-                    whenLoggedOut: false
-                }
-            },{
-                path: '/user/:email',
-                component: {template: '<user :email="$route.params.email"></user>'},
-                meta: {
-                    public: false,  // Allow access to even if not logged in
-                    whenLoggedOut: false
-                }
-            },
-            {
                 path: '/vm/:orgName/:vmName',
                 component: {template: '<vm :orgName="$route.params.orgName" :vmName="$route.params.vmName"></vm>'},
                 meta: {
@@ -86,13 +103,14 @@ const router = new VueRouter(
                 }
             },
             {
-                path: '/profile',
-                component: {template: '<profile></profile>'},
+                path: '/drive/:orgName/:driveName',
+                component: {template: '<drive :orgName="$route.params.orgName" :driveName="$route.params.driveName"></drive>'},
                 meta: {
                     public: false,  // Allow access to even if not logged in
                     whenLoggedOut: false
                 }
-            },
+            }
+
         ]
     }
 );
@@ -100,7 +118,6 @@ const router = new VueRouter(
 router.beforeEach((to, from, next) => {
     axios.get('/rest/logged').then(response => {
         let loggedIn = response.data !== "";
-        
         const isPublic = to.matched.some(record => record.meta.public);
         const whenLoggedOut = to.matched.some(record => record.meta.whenLoggedOut);
 

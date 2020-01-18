@@ -31,9 +31,9 @@ Vue.component("category", {
     <div class="pt-3" id="page-wrapper">
         <div class="container">
             <h1>{{category.name}}</h1>
-            <h2>Has {{category.cores}} cores.</h2>
-            <h2>Has {{category.ram}}GB RAM.</h2>
-            <h2>Has {{category.gpuCores}} GPU cores.</h2>
+            <p class="lead">Has {{category.cores}} cores.</p>
+            <p class="lead">Has {{category.ram}}GB RAM.</p>
+            <p class="lead">Has {{category.gpuCores}} GPU cores.</p>
         </div>
         <add-category mode="edit" :preCategory="category" @edit="edited"/>
         <delete-category :category="category"/>

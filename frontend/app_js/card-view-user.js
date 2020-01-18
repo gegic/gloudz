@@ -15,7 +15,7 @@ Vue.component("card-view-user", {
   <div class="row no-gutters">
     <div class="col-ld-3">
       <img v-if="user.role != 'superAdmin'" v-bind:src="user.organization.logoPath" class="logo">
-      <img v-if="user.role == 'superAdmin'" src="data/imgs/superAdmin.png" class="logo">
+      <img v-if="user.role == 'superAdmin'" src="data/organization_logos/logo.png" class="logo">
 
     </div>
     <div class="col-md-8">

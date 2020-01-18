@@ -6,7 +6,7 @@ Vue.component("card-view", {
         return {
         }
     },
-    props: ['organization'],
+    props: ['organization', 'isClickable'],
 
     methods: {
         pushToOrganization: function () {
@@ -15,7 +15,7 @@ Vue.component("card-view", {
     },
     
     template: `
-<div class="card mb-3 ml-3 mr-3 clickable-card" v-on:click="pushToOrganization">
+<div class="card mb-3 ml-3 mr-3" v-bind:class="{'clickable-card': isClickable}" v-on:click="pushToOrganization">
   <div class="row no-gutters">
     <div class="col-ld-3">
       <img v-bind:src="organization.logoPath" class="logo">
@@ -24,8 +24,12 @@ Vue.component("card-view", {
       <div class="card-body">
         <h5 class="card-title">{{ organization.name }}</h5>
         <p class="card-text">{{ organization.description }}</p>
-        <p class="text-muted">More info</p>
+        <p v-if="isClickable" class="text-muted">More info</p>
       </div>
+      
+      <table>
+      
+</table>
     </div>
   </div>
 </div>

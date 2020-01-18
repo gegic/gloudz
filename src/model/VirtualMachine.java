@@ -5,15 +5,15 @@
  ***********************************************************************/
 package model;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class VirtualMachine {
    private String name;
    private VMCategory category;
-   private List<Drive> drives = new ArrayList<>();
-   private List<Activity> activities = new ArrayList<>();
+   private List<Drive> drives;
+   private List<Activity> activities;
    private Activity ongoingActivity;
 
    public Activity getOngoingActivity() {
@@ -57,7 +57,13 @@ public class VirtualMachine {
       return drives.iterator();
    }
 
-  
+   public void setDrives(List<Drive> newDrive) {
+      removeAllDrive();
+      for (Drive d : drives) {
+         drives.add(d);
+         d.setOVM(this);
+      }
+   }
 
    public void addDrive(Drive newDrive) {
       if (newDrive == null)
@@ -93,11 +99,26 @@ public class VirtualMachine {
       }
    }
 
+   public void setProperties(VirtualMachine newVM){
+      this.name = newVM.getName();
+      this.category = newVM.getCategory();
+      this.setActivities(newVM.getActivities());
+      this.setDrives(newVM.getDrives());
+      this.ongoingActivity = newVM.getOngoingActivity();
+   }
 
    public Iterator<Activity> getIteratorActivity() {
       if (activities == null)
          activities = new ArrayList<Activity>();
       return activities.iterator();
+   }
+
+   public void setActivities(List<Activity> newActivity) {
+      removeAllActivity();
+      for (Activity a : newActivity) {
+         activities.add(a);
+         a.setOVM(this);
+      }
    }
 
    public void addActivity(Activity newActivity) {
@@ -140,27 +161,5 @@ public class VirtualMachine {
          activities = new ArrayList<Activity>();
       return activities;
    }
-   public void setProperties(VirtualMachine newVM){
-      this.name = newVM.getName();
-      this.category = newVM.getCategory();
-      this.setActivities(newVM.getActivities());
-      this.setDrives(newVM.getDrives());
-      this.ongoingActivity = newVM.getOngoingActivity();
-   }
-   
-   public void setActivities(List<Activity> newActivity) {
-      removeAllActivity();
-      for (Activity a : newActivity) {
-         activities.add(a);
-         a.setOVM(this);
-      }
-   }
-   
-   public void setDrives(List<Drive> newDrive) {
-      removeAllDrive();
-      for (Drive d : drives) {
-         drives.add(d);
-         d.setOVM(this);
-      }
-   }
+
 }

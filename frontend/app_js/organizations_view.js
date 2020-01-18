@@ -10,7 +10,7 @@ Vue.component("organizations", {
 <div >
     <sidebar activeTab="organizations"></sidebar>
     <div class="pt-3" id="page-wrapper">
-        <card-view v-for="organization in organizations" v-bind:organization="organization"></card-view>
+        <card-view  v-for="organization in organizations" v-bind:organization="organization" is-clickable="true"></card-view>
     </div>
     <add-organization/>
 </div>
