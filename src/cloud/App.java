@@ -1,36 +1,24 @@
 package cloud;
-import static spark.Spark.externalStaticFileLocation;
-import static spark.Spark.get;
-import static spark.Spark.port;
-import static spark.Spark.post;
-import static spark.Spark.delete;
+import static spark.Spark.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.time.LocalDate;
-import java.util.Scanner;
-
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.http.Part;
-
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import deserializers.DateSerializer;
 import deserializers.OrganizationDeserializer;
 import deserializers.UserDeserializer;
 import deserializers.VirtualMachineDeserializer;
-import model.Application;
-import model.Drive;
-import model.Organization;
-import model.User;
-import model.VMCategory;
-import model.VirtualMachine;
+import model.*;
+
+import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import com.google.gson.Gson;
 import spark.utils.IOUtils;
+
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
 
 public class App {
 
@@ -46,13 +34,14 @@ public class App {
 		}
 
 		application = Application.getInstance();
-		
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(User.class, new UserDeserializer());
 		gsonBuilder.registerTypeAdapter(VirtualMachine.class, new VirtualMachineDeserializer());
 		gsonBuilder.registerTypeAdapter(LocalDate.class, new DateSerializer());
 		gsonBuilder.registerTypeAdapter(Organization.class, new OrganizationDeserializer());
 		g = gsonBuilder.create();
+
+		application.loadAll(g);
 
 		post("/rest/login", (req, res) ->{
 			System.out.println(req.body());
@@ -75,46 +64,7 @@ public class App {
 			req.session().invalidate();
 			return "";
 		});
-		
-		get("/rest/categories", (req, res) -> g.toJson(application.getCategories()));
-		
-				post("/rest/category", (req, res) -> {
-			VMCategory cat = g.fromJson(req.body(), VMCategory.class);
-			if(application.hasCategory(cat.getName())){
-				res.status(400);
-				return "";
-			}
 
-			application.addCategory(cat);
-			
-			return "";
-		});
-
-		get("/rest/category/:name", (req, res) -> g.toJson(application.getCategory(req.params("name"))));
-
-		post("/rest/category/:name", (req, res) -> {
-			VMCategory edited = g.fromJson(req.body(), VMCategory.class);
-			if(application.hasCategoryExcept(edited.getName(), req.params("name"))){
-				res.status(400);
-				return "";
-			}
-			if(!application.setCategory(req.params("name"), edited)) {
-				res.status(400);
-				return "";
-			}
-			
-			return g.toJson(new ReturnJSON(edited.getName()));
-		});
-
-		delete("/rest/category/:name", (req, res) -> {
-			if(!application.removeCategory(req.params("name"))){
-				res.status(400);
-				return "";
-			}
-			
-			return "";
-		});
-		
 		get("/rest/organizations", (req, res) -> g.toJson(application.getOrganizations()));
 
 		post("/rest/organization", (req, res) -> {
@@ -140,6 +90,7 @@ public class App {
 			System.out.println("UBACEN");
 
 			res.status(201);
+			application.saveAll(g); // moze na drugi tred da se baci al ne smijem
 			return "";
 		});
 
@@ -171,10 +122,11 @@ public class App {
 			found.setLogoPath(path);
 
 			res.status(200);
+			application.saveAll(g);
 			return g.toJson(new ReturnJSON(found.getName()));
 
 		});
-		
+
 		get("/rest/users", (req, res) -> g.toJson(application.getUsers()));
 
 		get("/rest/users/:orgName", (req, res) -> {
@@ -190,7 +142,7 @@ public class App {
 				return "";
 			}
 			application.addUsers(added);
-
+			application.saveAll(g);
 			return "";
 		});
 
@@ -209,7 +161,7 @@ public class App {
 				res.status(400);
 				return "";
 			}
-
+			application.saveAll(g);
 			return g.toJson(new ReturnJSON(newUser.getEmail()));
 		});
 
@@ -221,10 +173,49 @@ public class App {
 			if(application.removeUser(req.params("email")))
 				res.status(200);
 			else res.status(400);
-
+			application.saveAll(g);
 			return "";
 		});
-		
+
+		get("/rest/categories", (req, res) -> g.toJson(application.getCategories()));
+
+		post("/rest/category", (req, res) -> {
+			VMCategory cat = g.fromJson(req.body(), VMCategory.class);
+			if(application.hasCategory(cat.getName())){
+				res.status(400);
+				return "";
+			}
+
+			application.addCategory(cat);
+			application.saveAll(g);
+			return "";
+		});
+
+		get("/rest/category/:name", (req, res) -> g.toJson(application.getCategory(req.params("name"))));
+
+		post("/rest/category/:name", (req, res) -> {
+			VMCategory edited = g.fromJson(req.body(), VMCategory.class);
+			if(application.hasCategoryExcept(edited.getName(), req.params("name"))){
+				res.status(400);
+				return "";
+			}
+			if(!application.setCategory(req.params("name"), edited)) {
+				res.status(400);
+				return "";
+			}
+			application.saveAll(g);
+			return g.toJson(new ReturnJSON(edited.getName()));
+		});
+
+		delete("/rest/category/:name", (req, res) -> {
+			if(!application.removeCategory(req.params("name"))){
+				res.status(400);
+				return "";
+			}
+			application.saveAll(g);
+			return "";
+		});
+
 		get("/rest/vms", (req, res) -> g.toJson(application.getMachines()));
 
 		post("/rest/vm", (req, res) -> {
@@ -237,6 +228,7 @@ public class App {
 				return "";
 			}
 			application.addMachine(added, org);
+			application.saveAll(g);
 			return "";
 		});
 
@@ -257,6 +249,7 @@ public class App {
 				res.status(400);
 				return "";
 			}
+			application.saveAll(g);
 			return g.toJson(new ReturnJSON(req.params("orgName") + "/" + newMachine.getName()));
 		});
 
@@ -272,6 +265,7 @@ public class App {
 			if(application.removeMachine(req.params("vmName"), req.params("orgName")))
 				res.status(200);
 			else res.status(400);
+			application.saveAll(g);
 			return "";
 		});
 
@@ -286,6 +280,7 @@ public class App {
 				return "";
 			}
 			application.addDrive(added.getFirst(), added.getSecond(), org);
+			application.saveAll(g);
 			return "";
 		});
 
@@ -313,6 +308,7 @@ public class App {
 				res.status(400);
 				return "";
 			}
+			application.saveAll(g);
 			return g.toJson(new ReturnJSON(req.params("orgName") + "/" + drive.getName()));
 		});
 
@@ -328,19 +324,18 @@ public class App {
 			if(application.removeDrive(req.params("driveName"), req.params("orgName")))
 				res.status(200);
 			else res.status(400);
+			application.saveAll(g);
 			return "";
 		});
+
 	}
-	
-	
+
 	private static String savePhoto(Part filePart, String name){
 		try (InputStream inputStream = filePart.getInputStream()) {
 			String extension = filePart.getSubmittedFileName().substring(filePart.getSubmittedFileName().lastIndexOf('.'));
 			String shorterPath = "data/organization_logos/" + name.toLowerCase() + extension;
 			String path = "frontend/" + shorterPath;
-			File f = new File(path);
-			f.createNewFile();
-			OutputStream outputStream = new FileOutputStream(f);
+			OutputStream outputStream = new FileOutputStream(path);
 			IOUtils.copy(inputStream, outputStream);
 			outputStream.close();
 			return shorterPath;
@@ -349,7 +344,7 @@ public class App {
 		}
 		return null;
 	}
-	
+
 	private static class ReturnJSON{
 		private String location;
 
@@ -375,4 +370,6 @@ public class App {
 			return first;
 		}
 	}
+
+
 }
