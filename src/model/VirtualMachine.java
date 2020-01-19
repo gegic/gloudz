@@ -12,8 +12,8 @@ import java.util.Iterator;
 public class VirtualMachine {
    private String name;
    private VMCategory category;
-   private List<Drive> drives;
-   private List<Activity> activities;
+   private List<Drive> drives = new ArrayList<>();
+   private List<Activity> activities = new ArrayList<>();
    private Activity ongoingActivity;
 
    public Activity getOngoingActivity() {

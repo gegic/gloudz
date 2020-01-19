@@ -47,6 +47,12 @@ Vue.component("vms", {
 <div >
     <sidebar :activeUser="activeUser" activeTab="vm" v-model:user="activeUser"></sidebar>
     <div class="pt-3" id="page-wrapper">
+        <form class="form-label-group m-3 min" @submit="search" >
+            <input type="text" id="search" class="form-control searchbar" placeholder="Search" v-model="searched" maxlength="40" autocomplete="off">
+            <button type="submit" class="btn btn-primary search-button" value="SEARCH">SEARCH</button>
+            <filter-vm :filterData="filterData" @filtered="filter"/>
+            <label for="search">Search</label>
+        </form>
         <div v-for="organization in foundOrganizations" >
             <h1 class="display-4 m-3" v-if="organization.machines.length > 0">{{organization.name}}</h1>
             <card-view-vm v-for="vm in organization.machines" :organization="organization" :vm="vm"></card-view-vm>

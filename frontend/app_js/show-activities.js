@@ -31,7 +31,7 @@ Vue.component("show-activities", {
       </div>
       <div class="modal-body activities">
             
-            <table v-if="vm.activities && vm.activities.length > 0" class="table">
+            <table v-if="(vm.activities && vm.activities.length > 0) || vm.ongoingActivity" class="table">
               <thead>
                 <tr>
                   <th scope="col">Starting date</th>
@@ -49,7 +49,7 @@ Vue.component("show-activities", {
                 <tr v-if="vm.ongoingActivity">
                     <td><input type="date" class="form-control" :value="vm.ongoingActivity.startingDate" disabled></td>
                     <td><input type="date" class="form-control" disabled></td>
-                    <td><p class="alert-danger">Ongoing</p></td>
+                    <td class="alert-danger">Ongoing</td>
                 </tr>
                 
               </tbody>
