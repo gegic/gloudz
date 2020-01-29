@@ -44,10 +44,10 @@ Vue.component("drive", {
     <div class="pt-3" id="page-wrapper">
         <div class="container">
             <h1>{{drive.name}}</h1>
-            <p class="lead">Sold to organization {{organization.name}}</>
-            <p class="lead">Has capacity of {{drive.capacity}}</>
-            <p class="lead">Is of type {{drive.type}}</>
-            <p class="lead" v-if="vm">Is attached to the {{vm.name}}.</>
+            <p class="lead">Sold to organization {{organization.name}}</p>
+            <p class="lead">Has capacity of {{drive.capacity}}</p>
+            <p class="lead">Is of type {{drive.type}}</p>
+            <p class="lead" v-if="vm">Is attached to the {{vm.name}}.</p>
         </div>
         <add-drive :activeUser="activeUser" v-if="activeUser && activeUser.role != 'user'" mode="edit" :organization="organization" :preDrive="drive" :vm="vm" @edit="edited"/>
         <delete-drive v-if="activeUser && activeUser.role != 'user'" :drive="drive" :organization="organization"/>

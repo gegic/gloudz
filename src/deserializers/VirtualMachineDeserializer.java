@@ -5,6 +5,8 @@ import model.*;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class VirtualMachineDeserializer implements JsonDeserializer<VirtualMachine> {
@@ -22,7 +24,7 @@ public class VirtualMachineDeserializer implements JsonDeserializer<VirtualMachi
         }
         if(jsonObject.has("ongoingActivity")) {
             JsonObject jOactivity = jsonObject.get("ongoingActivity").getAsJsonObject();
-            Activity ac = new Activity(LocalDate.parse(jOactivity.get("startingDate").getAsString()));
+            Activity ac = new Activity(LocalDateTime.parse(jOactivity.get("startingDate").getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH")));
             added.setOngoingActivity(ac);
         }
 
@@ -31,8 +33,8 @@ public class VirtualMachineDeserializer implements JsonDeserializer<VirtualMachi
             for(JsonElement je : activityArray){
                 JsonObject jobj = je.getAsJsonObject();
                 Activity ac = new Activity(
-                        LocalDate.parse(jobj.get("startingDate").getAsString()),
-                        LocalDate.parse(jobj.get("endingDate").getAsString()));
+                        LocalDateTime.parse(jobj.get("startingDate").getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH")),
+                        LocalDateTime.parse(jobj.get("endingDate").getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH")));
                 added.addActivity(ac);
             }
         }

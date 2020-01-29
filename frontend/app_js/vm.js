@@ -36,7 +36,8 @@ Vue.component("vm", {
             if (day.length < 2)
                 day = '0' + day;
 
-            return [year, month, day].join('-');
+            let formattedDate =  [year, month, day].join('-');
+            return formattedDate + "T" + d.getHours();
         }
     },
     methods:{

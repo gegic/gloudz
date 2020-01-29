@@ -9,6 +9,6 @@ import java.time.format.DateTimeFormatter;
 public class DateDeserializer implements JsonDeserializer<LocalDate> {
     @Override
     public LocalDate deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        return LocalDate.parse(jsonElement.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
+        return LocalDate.parse(jsonElement.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

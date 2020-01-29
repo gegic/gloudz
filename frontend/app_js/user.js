@@ -35,7 +35,7 @@ Vue.component("user", {
     <div class="pt-3" id="page-wrapper">
         <div class="container">
             <img v-if="user.role != 'superAdmin'" v-bind:src="user.organization.logoPath" class="logo">
-            <img v-if="user.role == 'superAdmin'" src="data/imgs/superAdmin.png" class="logo">
+            <img v-if="user.role == 'superAdmin'" src="data/organization_logos/logo.png" class="logo">
             <h1>{{user.firstName}} {{user.lastName}}</h1>
             <p class="lead">Contact at {{user.email}}</p>
             <p class="lead">{{user.role}}</p>

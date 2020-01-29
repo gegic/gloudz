@@ -35,20 +35,31 @@ Vue.component("show-activities", {
               <thead>
                 <tr>
                   <th scope="col">Starting date</th>
+                  <th scope="col">Starting time</th>
+
                   <th scope="col">Ending date</th>
+                  <th scope="col">Ending time</th>
+
                   <th scope="col">Remove</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="activity in vm.activities">
-                  <td><input type="date" class="form-control" v-model="activity.startingDate" @change="showAnother(this)" :max="activity.endingDate"></td>
-                  <td><input type="date" class="form-control" v-model="activity.endingDate" :min="activity.startingDate" :disabled="!activity.startingDate"></td>
+                  <td><input type="date" class="form-control" @change="setStartingDate($event, activity)" v-bind:value="getDate(activity.startingDate)" :max="getDate(activity.endingDate)"></td>
+                  <td><input type="number" class="form-control" @change="setStartingTime($event, activity)" v-bind:value="getTime(activity.startingDate)" min="0" max="23" :disabled="!activity.startingDate"></td>
+                  <td><input type="date" class="form-control" @change="setEndingDate($event, activity)" v-bind:value="getDate(activity.endingDate)" :min="getDate(activity.startingDate)" :disabled="!activity.startingDate"></td>
+                  <td><input type="number" class="form-control" @change="setEndingTime($event, activity)" v-bind:value="getTime(activity.endingDate)" min="0" max="23" :disabled="!activity.endingDate"></td>
+
                   <td><button type="button" class="btn btn-danger" @click="remove(activity)">Remove</button> </td>
                 </tr>
                 
                 <tr v-if="vm.ongoingActivity">
-                    <td><input type="date" class="form-control" :value="vm.ongoingActivity.startingDate" disabled></td>
+                    <td><input type="date" class="form-control" :value="getDate(vm.ongoingActivity.startingDate)" disabled></td>
+                    <td><input type="number" class="form-control" v-bind:value="getTime(vm.ongoingActivity.startingDate)" disabled></td>
+
                     <td><input type="date" class="form-control" disabled></td>
+                    <td><input type="number" class="form-control" v-bind:value="getTime(vm.ongoingActivity.endingDate)" disabled></td>
+
                     <td class="alert-danger">Ongoing</td>
                 </tr>
                 
@@ -65,7 +76,7 @@ Vue.component("show-activities", {
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" v-on:click="showModal = false">Close</button>
             <button v-if="activeUser && activeUser.role === 'superAdmin'" type="button" class="btn btn-primary" @click="addEmptyActivity">Add an empty activity</button>
-            <button v-if="activeUser && activeUser.role === 'superAdmin'" type="button" type="button" class="btn btn-primary" @click="checkAndSend">Submit</button>
+            <button v-if="activeUser && activeUser.role === 'superAdmin'" type="button" class="btn btn-primary" @click="checkAndSend">Submit</button>
           </div>
 
     </div>
@@ -86,9 +97,57 @@ Vue.component("show-activities", {
         }
     },
     methods: {
-        showAnother: function(activity){
+        setStartingDate: function(event, activity){
 
+            let time = "00";
+            if(activity.startingDate) {
+                time = activity.startingDate.split("T")[1];
+            }
+            activity.startingDate = event.target.value + "T" + time;
+            this.$forceUpdate();
         },
+        setStartingTime: function(event, activity){
+            if(event.target.value < 0 || event.target.value > 23){
+                alert("Mora da bude u opsegu 0 do 23");
+                event.preventDefault();
+            }
+            let date = activity.startingDate.split("T")[0];
+            let time = event.target.value;
+            if(time < 10){
+                time = "0" + time;
+            }
+            activity.startingDate = date + "T" + time;
+            this.$forceUpdate();
+        },
+        getDate: function(formattedDate){
+            if(!formattedDate) return null;
+            return formattedDate.split("T")[0];
+        },
+        getTime: function(formattedDate){
+            if(!formattedDate) return null;
+            return formattedDate.split("T")[1];
+        },
+        setEndingDate: function(event, activity){
+            let time = "00";
+            if(activity.endingDate)
+                time = activity.endingDate.split("T")[1];
+            activity.endingDate = event.target.value + "T" + time;
+            this.$forceUpdate();
+        },
+        setEndingTime: function(event, activity){
+            if(event.target.value < 0 || event.target.value > 23){
+                alert("Mora da bude u opsegu 0 do 23");
+                event.preventDefault();
+            }
+            let date = activity.endingDate.split("T")[0];
+            let time = event.target.value;
+            if(time < 10){
+                time = "0" + time;
+            }
+            activity.endingDate = date + "T" + time;
+            this.$forceUpdate();
+        },
+
         checkAndSend: function (event) {
             event.preventDefault();
             this.error = null;
@@ -100,6 +159,14 @@ Vue.component("show-activities", {
                 }
                 if(activity.endingDate == null){
                     this.error = "Pleast type in all ending dates.";
+                    return;
+                }
+                let startDate = activity.startingDate.split("T")[0];
+                let startTime = activity.startingDate.split("T")[1];
+                let endDate = activity.endingDate.split("T")[0];
+                let endTime = activity.endingDate.split("T")[1];
+                if(startDate === endDate && startTime > endTime){
+                    this.error = "Start must be before ending";
                     return;
                 }
             }

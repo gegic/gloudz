@@ -5,19 +5,19 @@
  ***********************************************************************/
 package model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Activity {
-   private LocalDate startingDate;
-   private LocalDate endingDate;
+   private LocalDateTime startingDate;
+   private LocalDateTime endingDate;
    
    transient public VirtualMachine virtualMachine;
 
-   public LocalDate getStartingDate() {
+   public LocalDateTime getStartingDate() {
       return startingDate;
    }
 
-   public LocalDate getEndingDate() {
+   public LocalDateTime getEndingDate() {
       return endingDate;
    }
 
@@ -44,12 +44,12 @@ public class Activity {
       }
    }
 
-   public Activity(LocalDate startingDate, LocalDate endingDate) {
+   public Activity(LocalDateTime startingDate, LocalDateTime endingDate) {
       this.startingDate = startingDate;
       this.endingDate = endingDate;
    }
 
-   public Activity(LocalDate startingDate) {
+   public Activity(LocalDateTime startingDate) {
       this.startingDate = startingDate;
       this.endingDate = null;
    }

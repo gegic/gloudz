@@ -92,6 +92,7 @@ Vue.component("organization", {
         
         </table>
         </div>
+        <monthly-bill :organization="organization"/>
         <add-organization mode="edit" :organization="organization" @edit="edited"/>
     </div>
     

@@ -13,6 +13,7 @@ import com.sun.org.apache.xpath.internal.operations.Or;
 import java.io.*;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
@@ -385,7 +386,7 @@ public class Application {
       VirtualMachine vm2 = new VirtualMachine("DSA dva", categories.get(0));
       organizations.get(0).addMachine(vm1);
       machines.add(vm1);
-      vm1.addActivity(new Activity(LocalDate.parse("2019-11-01", DateTimeFormatter.ISO_LOCAL_DATE), LocalDate.parse("2020-01-02")));
+      vm1.addActivity(new Activity(LocalDateTime.parse("2019-11-01T10:15:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME), LocalDateTime.parse("2020-01-02T11:15:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
       organizations.get(1).addMachine(vm2);
       machines.add(vm2);
       Drive d1 = new Drive("OurSSD", 50, DriveType.ssd);

@@ -96,6 +96,8 @@ public class VirtualMachine {
             d.nullVM();
          }
          drives.clear();
+      } else{
+         drives = new ArrayList<>();
       }
    }
 

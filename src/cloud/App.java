@@ -3,15 +3,12 @@ import static spark.Spark.*;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import deserializers.DateSerializer;
-import deserializers.OrganizationDeserializer;
-import deserializers.UserDeserializer;
-import deserializers.VirtualMachineDeserializer;
+import deserializers.*;
 import model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -37,7 +34,9 @@ public class App {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(User.class, new UserDeserializer());
 		gsonBuilder.registerTypeAdapter(VirtualMachine.class, new VirtualMachineDeserializer());
-		gsonBuilder.registerTypeAdapter(LocalDate.class, new DateSerializer());
+		gsonBuilder.registerTypeAdapter(LocalDateTime.class, new DateTimeSerializer());
+		gsonBuilder.registerTypeAdapter(LocalDate.class, new DateDeserializer());
+
 		gsonBuilder.registerTypeAdapter(Organization.class, new OrganizationDeserializer());
 		g = gsonBuilder.create();
 
@@ -327,7 +326,11 @@ public class App {
 			application.saveAll(g);
 			return "";
 		});
+        post("/rest/monthlybill", (req, res) -> {
+            MonthlyBill mb = g.fromJson(req.body(), MonthlyBill.class);
 
+            return g.toJson(mb.bill());
+        });
 	}
 
 	private static String savePhoto(Part filePart, String name){
