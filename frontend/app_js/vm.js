@@ -12,7 +12,7 @@ Vue.component("vm", {
     props: ['vmName', 'orgName'],
     created(){
         this.isLoading = true;
-        axios.get('/rest/logged').then(response => {
+        axios.get('/logged').then(response => {
             this.activeUser = response.data;
             axios.get('/rest/vm/' + this.orgName + '/' + this.vmName).then(res => {
                 let orgVm = res.data;
@@ -63,7 +63,7 @@ Vue.component("vm", {
 
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         edited: function () {

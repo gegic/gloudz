@@ -9,7 +9,7 @@ Vue.component("profile", {
     },
     created(){
         this.isLoading = true;
-        axios.get("/rest/logged").then(res => {
+        axios.get("/logged").then(res => {
             this.user = res.data;
             this.isLoading = false;
         });

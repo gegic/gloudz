@@ -11,7 +11,7 @@ Vue.component("user", {
     props: ['email'],
     created(){
         this.isLoading = true;
-        axios.get('/rest/logged').then(response => {
+        axios.get('/logged').then(response => {
             this.activeUser = response.data;
             axios.get('/rest/user/' + this.email).then(res => {
                 this.user = res.data;

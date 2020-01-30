@@ -99,7 +99,7 @@ Vue.component("add-vm", {
                 this.error = "Virtual machine has to belong to a category";
 
             }
-            else if (this.selectedOrganization === null){
+            else if (this.selectedOrganization === null && this.mode !== 'edit'){
                 this.error = "Virtual machine has to belong to an organization";
 
             }
@@ -122,7 +122,7 @@ Vue.component("add-vm", {
                     this.$router.go();
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         edit: function (event) {
@@ -137,7 +137,7 @@ Vue.component("add-vm", {
 
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         resetForm: function () {

@@ -14,7 +14,7 @@ Vue.component("drive", {
     created(){
         this.isLoading = true;
 
-        axios.get('/rest/logged').then(response => {
+        axios.get('/logged').then(response => {
             this.activeUser = response.data;
             axios.get('/rest/drive/' + this.orgName + '/' + this.driveName).then(res => {
                 let orgDrive = res.data;

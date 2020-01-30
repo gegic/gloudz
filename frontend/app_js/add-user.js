@@ -72,7 +72,7 @@ Vue.component("add-user", {
             </div>
             <div v-if="!preUser || (preUser && preUser.role != 'superAdmin')" class="form-select">
 
-                <select id="role" v-model="user.role" class="form-control" required>
+                <select id="role" v-model="user.role" class="form-control" :disabled="activeUser && activeUser.role !== 'superAdmin'" required>
                     <option value="null" disabled selected>Select a role</option>
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
@@ -132,7 +132,7 @@ Vue.component("add-user", {
                 this.error = "Password not verified.";
             } else if (this.user.role === null){
             	this.error = "User needs to have a role";
-            } else if (this.user.organization === null){ 
+            } else if (this.user.organization === null && this.mode !== 'edit'){ 
             	this.error = "User need to be emplyed at some organization.";
 
             }else {
@@ -154,7 +154,7 @@ Vue.component("add-user", {
                     this.$router.go();
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                     return;
                 });
         },
@@ -181,7 +181,7 @@ Vue.component("add-user", {
 
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 })
         },
         resetForm: function () {

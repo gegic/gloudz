@@ -40,7 +40,7 @@ Vue.component("show-activities", {
                   <th scope="col">Ending date</th>
                   <th scope="col">Ending time</th>
 
-                  <th scope="col">Remove</th>
+                  <th v-if="activeUser && activeUser.role === 'superAdmin'" scope="col">Remove</th>
                 </tr>
               </thead>
               <tbody>
@@ -50,7 +50,7 @@ Vue.component("show-activities", {
                   <td><input type="date" class="form-control" @change="setEndingDate($event, activity)" v-bind:value="getDate(activity.endingDate)" :min="getDate(activity.startingDate)" :disabled="!activity.startingDate"></td>
                   <td><input type="number" class="form-control" @change="setEndingTime($event, activity)" v-bind:value="getTime(activity.endingDate)" min="0" max="23" :disabled="!activity.endingDate"></td>
 
-                  <td><button type="button" class="btn btn-danger" @click="remove(activity)">Remove</button> </td>
+                  <td v-if="activeUser && activeUser.role === 'superAdmin'"><button type="button" class="btn btn-danger" @click="remove(activity)">Remove</button> </td>
                 </tr>
                 
                 <tr v-if="vm.ongoingActivity">
@@ -187,7 +187,7 @@ Vue.component("show-activities", {
 
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         resetForm: function () {

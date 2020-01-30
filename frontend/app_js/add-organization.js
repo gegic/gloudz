@@ -34,12 +34,12 @@ Vue.component("add-organization", {
                 <input type="file" ref="logo" class="form-control-file" id="logo" name="logo" accept="image/png">
               </div>
               
-              <div class="form-label-group">
+              <div>
                 <label for="name">Organization name</label>
                 <input type="text" id="name" name="name" v-model="name" required>
               </div>
               
-              <div class="form-label-group">
+              <div>
                 <label for="desc">Organization description</label>
                 <textarea rows="4" cols="50" id="desc" name="desc" form="add-form" v-model="description" placeholder="Enter description.." required></textarea>
               </div>
@@ -104,7 +104,7 @@ Vue.component("add-organization", {
                      this.$router.go();
                  })
                  .catch(res => {
-                     this.error = "This name is already taken";
+                     this.error = res.response.data.text;;
                  });
         },
         edit: function (event) {
@@ -119,7 +119,7 @@ Vue.component("add-organization", {
                     });;
                 })
                 .catch(res => {
-                    this.error = "This name is already taken";
+                    this.error = res.response.data.text;;
                 });
         },
         resetForm: function () {

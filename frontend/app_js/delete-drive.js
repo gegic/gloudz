@@ -23,7 +23,7 @@ Vue.component("delete-drive", {
         deleteMachine: function () {
             axios.delete("/rest/drive/" + this.organization.name + "/" + this.drive.name)
                 .then(res => {
-                    alert("Drive successfully deleted");
+                    alert(res.data.text);
                     this.$router.push("/drives");
                 })
         }

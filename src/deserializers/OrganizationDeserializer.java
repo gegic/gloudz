@@ -36,7 +36,6 @@ public class OrganizationDeserializer implements JsonDeserializer<Organization> 
             }
         }
 
-        System.out.println(jsonElement.toString());
         return added;
     }
 }

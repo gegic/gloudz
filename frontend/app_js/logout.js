@@ -5,7 +5,7 @@ Vue.component("logout", {
 <p>LOGGING OUT...</p>
 `,
     created(){
-        axios.get('/rest/logout').then(this.$router.push('/login'));
+        axios.get('/logout').then(this.$router.push('/login'));
     }
 
 });

@@ -24,7 +24,7 @@ Vue.component("delete-user", {
         deleteUser: function () {
             axios.delete("/rest/user/" + this.user.email)
                 .then(res => {
-                    alert("User successfully deleted");
+                    alert(res.data.text);
                     this.$router.push("/users");
                 })
         }

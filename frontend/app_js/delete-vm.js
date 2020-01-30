@@ -23,7 +23,7 @@ Vue.component("delete-vm", {
         deleteMachine: function () {
             axios.delete("/rest/vm/" + this.organization.name + "/" + this.vm.name)
                 .then(res => {
-                    alert("Virtual machine successfully deleted");
+                    alert(res.data.text);
                     this.$router.push("/");
                 })
         }

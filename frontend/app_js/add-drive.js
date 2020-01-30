@@ -105,7 +105,15 @@ Vue.component("add-drive", {
             if (false) {
                 this.error = "Name cannot contain less than two lettters.";
 
-            } else {
+            } 
+            if (this.selectedOrganization == null && this.mode !== 'edit'){
+                this.error = "Organization must be selected";
+                return;
+        	}
+        	if (this.drive.type == null){
+        		this.error = "Every drive needs to have a type";
+        		return;
+        	} else {
                 if (this.mode === "edit") {
                     this.edit(event);
                 } else {
@@ -114,21 +122,14 @@ Vue.component("add-drive", {
             }
         },
         add: function (event) {
-        	if (this.selectedOrganization == null){
-                this.error = "Organization must be selected";
-                return;
-        	}
-        	if (this.drive.type == null){
-        		this.error = "Every drive needs to have a type";
-        		return;
-        	} 
+        	
             let sendingData = {first: {first: this.drive, second: this.selectedVM}, second: this.selectedOrganization};
             axios.post("/rest/drive", sendingData)
                 .then(res => {
                     this.$router.go();
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         edit: function (event) {
@@ -143,7 +144,7 @@ Vue.component("add-drive", {
 
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         resetForm: function () {

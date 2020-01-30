@@ -19,7 +19,7 @@ Vue.component("users", {
 
 `,
     created(){
-        axios.get('/rest/logged').then(response => {
+        axios.get('/logged').then(response => {
             this.activeUser = response.data;
             if(this.activeUser.role === 'superAdmin') {
                 axios.get('/rest/users').then(res => {

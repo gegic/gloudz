@@ -20,7 +20,7 @@ Vue.component("drives", {
 
 `,
     created(){
-        axios.get('/rest/logged').then(response => {
+        axios.get('/logged').then(response => {
             this.activeUser = response.data;
             if(this.activeUser.role === 'superAdmin') {
                 axios.get('/rest/organizations').then(res => {

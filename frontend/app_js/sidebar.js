@@ -8,7 +8,7 @@ Vue.component("sidebar", {
     },
     props: ['activeTab'],
     created(){
-        axios.get('/rest/logged').then(response => {
+        axios.get('/logged').then(response => {
             this.activeUser = response.data;
         });
     },

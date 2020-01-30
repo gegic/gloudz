@@ -55,11 +55,11 @@ Vue.component("login", {
 				this.error = "Password has to be at least 8 characters long";
 			}
 
-			axios.post("/rest/login", { email: this.email, password: this.password })
+			axios.post("/login", { email: this.email, password: this.password })
 				 .then((response) => {
 					 this.$router.push('/');
 				 })
-				.catch(e => {this.error = "User with these credentials not found."});
+				.catch(e => {this.error = e.data.text});
 
 		}
 	}

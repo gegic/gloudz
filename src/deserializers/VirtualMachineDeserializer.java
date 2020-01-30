@@ -42,7 +42,6 @@ public class VirtualMachineDeserializer implements JsonDeserializer<VirtualMachi
         if(jsonObject.has("drives")){
             JsonArray driveArray = jsonObject.get("drives").getAsJsonArray();
             for(JsonElement je : driveArray){
-                System.out.println(je.toString());
 
                 JsonObject jobj = je.getAsJsonObject();
                 Drive d = new Drive(jobj.get("name").getAsString(),
@@ -53,10 +52,6 @@ public class VirtualMachineDeserializer implements JsonDeserializer<VirtualMachi
             }
         }
 
-        for (Activity activity : added.getActivities()) {
-            System.out.println(activity.getStartingDate());
-            System.out.println(activity.getEndingDate());
-        }
         return added;
     }
 }

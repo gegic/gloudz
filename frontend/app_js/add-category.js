@@ -118,7 +118,7 @@ Vue.component("add-category", {
                     this.$router.go();
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         edit: function (event) {
@@ -132,7 +132,7 @@ Vue.component("add-category", {
                     });;
                 })
                 .catch(res => {
-                    this.error = "Server error occurred";
+                    this.error = res.response.data.text;;
                 });
         },
         resetForm: function () {

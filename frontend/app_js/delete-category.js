@@ -24,7 +24,7 @@ Vue.component("delete-category", {
         deleteUser: function () {
             axios.delete("/rest/category/" + this.category.name)
                 .then(res => {
-                    alert("Category successfully deleted");
+                    alert(res.data.text);
                     this.$router.push("/categories");
                 })
         }

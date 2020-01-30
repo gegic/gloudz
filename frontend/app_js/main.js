@@ -116,7 +116,7 @@ const router = new VueRouter(
 );
 
 router.beforeEach((to, from, next) => {
-    axios.get('/rest/logged').then(response => {
+    axios.get('/logged').then(response => {
         let loggedIn = response.data !== "";
         const isPublic = to.matched.some(record => record.meta.public);
         const whenLoggedOut = to.matched.some(record => record.meta.whenLoggedOut);
