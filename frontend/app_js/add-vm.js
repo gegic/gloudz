@@ -44,14 +44,14 @@ Vue.component("add-vm", {
             
             <div class="form-select">     
                 <select id="category" v-model="vm.category" class="form-control" required>
-                    <option value="" disabled selected>Select a category</option>
+                    <option value="null" disabled selected>Select a category</option>
                     <option v-for="category in categories" :value="category">{{category.name}} with {{category.cores}} cores, {{category.ram}}GB RAM</option>
                 </select>
             </div>     
             
             <div v-if="mode !== 'edit' && (activeUser && activeUser.role == 'superAdmin')" class="form-select">
                 <select id="organization" v-model="selectedOrganization" class="form-control" required>
-                    <option value="" disabled selected>Select an organization</option>
+                    <option value="null" disabled selected>Select an organization</option>
                     <option v-for="organization in organizations" :value="organization">{{organization.name}}</option>
                 </select>
             </div>        
@@ -94,7 +94,17 @@ Vue.component("add-vm", {
             if (this.vm.name.search(/[a-zA-Z][a-zA-Z]+$/) === -1) {
                 this.error = "Name cannot contain less than two lettters.";
 
-            } else {
+            } 
+            else if (this.vm.category === null){
+                this.error = "Virtual machine has to belong to a category";
+
+            }
+            else if (this.selectedOrganization === null){
+                this.error = "Virtual machine has to belong to an organization";
+
+            }
+            
+            else {
                 if(this.activeUser && this.activeUser.role === 'admin'){
                     this.selectedOrganization = this.activeUser.organization;
                 }

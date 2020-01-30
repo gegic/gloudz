@@ -42,13 +42,13 @@ Vue.component("add-drive", {
             </div>
             
             <div class="form-label-group">
-                <input type="number" id="capacity" class="form-control" placeholder="Capacity" v-model="drive.capacity" required>
+                <input type="number" id="capacity" class="form-control" placeholder="Capacity" v-model="drive.capacity" min="1" required>
                 <label for="capacity">Capacity</label>
             </div>
             
             <div class="form-select">     
                 <select id="type" v-model="drive.type" class="form-control" required>
-                    <option value="" disabled selected>Select a type</option>
+                    <option value="null" selected disabled>Select a type</option>
                     <option value="hdd">HDD</option>
                     <option value="ssd">SSD</option>
                 </select>
@@ -56,14 +56,14 @@ Vue.component("add-drive", {
             
             <div v-if="mode !== 'edit' && (activeUser && activeUser.role == 'superAdmin')" class="form-select">     
                 <select id="organization" v-model="selectedOrganization" class="form-control" required>
-                    <option value="" disabled selected>Select an organization</option>
+                    <option value="null" selected disabled>Select an organization</option>
                     <option v-for="organization in organizations" :value="organization">{{organization.name}}</option>
                 </select>
             </div>      
             
             <div class="form-select" v-if="selectedOrganization">     
-                <select id="vm" v-model="selectedVM" class="form-control" required>
-                    <option value="" disabled selected>Select a virtual machine</option>
+                <select id="vm" v-model="selectedVM" class="form-control">
+                    <option :value="null" selected="selected">Select a virtual machine</option>
                     <option v-for="vm in selectedOrganization.machines" :value="vm">{{vm.name}}</option>
                 </select>
             </div>      
@@ -114,6 +114,14 @@ Vue.component("add-drive", {
             }
         },
         add: function (event) {
+        	if (this.selectedOrganization == null){
+                this.error = "Organization must be selected";
+                return;
+        	}
+        	if (this.drive.type == null){
+        		this.error = "Every drive needs to have a type";
+        		return;
+        	} 
             let sendingData = {first: {first: this.drive, second: this.selectedVM}, second: this.selectedOrganization};
             axios.post("/rest/drive", sendingData)
                 .then(res => {

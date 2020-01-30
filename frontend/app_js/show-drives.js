@@ -14,7 +14,7 @@ Vue.component("show-drives", {
         }
     },
 
-    props: ["preVM", 'organization'],
+    props: ["preVM", 'activeUser', 'organization'],
     template: `
 
 <div>
@@ -37,7 +37,7 @@ Vue.component("show-drives", {
                   <th scope="col">Drive name</th>
                   <th scope="col">Capacity</th>
                   <th scope="col">Type</th>
-                  <th scope="col">Remove</th>
+                  <th v-if="activeUser && activeUser.role != 'user'" scope="col">Remove</th>
                 </tr>
               </thead>
               <tbody>
@@ -45,7 +45,7 @@ Vue.component("show-drives", {
                   <td>{{drive.name}}</td>
                   <td>{{drive.capacity}}</td>
                   <td>{{drive.type}}</td>
-                  <td><button type="button" class="btn btn-danger" @click="remove(drive)">Remove</button></td>
+                  <td v-if="activeUser && activeUser.role != 'user'"><button type="button" class="btn btn-danger" @click="remove(drive)">Remove</button></td>
                 </tr>
                 
               </tbody>
@@ -60,7 +60,6 @@ Vue.component("show-drives", {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" v-on:click="showModal = false">Close</button>
-            <button v-if="activeUser && activeUser.role != 'user'" type="button" class="btn btn-primary" @click="checkAndSend">Submit</button>
           </div>
 
     </div>
@@ -81,31 +80,6 @@ Vue.component("show-drives", {
         }
     },
     methods: {
-        showAnother: function(activity){
-
-        },
-        checkAndSend: function (event) {
-            event.preventDefault();
-            this.submit(event);
-        },
-        submit: function (event) {
-            axios.post("/rest/vm/" + this.organization.name + '/' + this.preVM.name, this.vm)
-                .then(res => {
-                    this.$router.push('/vm/' + res.data.location).then(e =>{
-                        this.resetForm();
-                        this.$emit("edit");
-                        this.showModal = false;
-                    }).catch(e => {
-                        this.resetForm();
-                        this.$emit("edit");
-                        this.showModal = false;
-                    });
-
-                })
-                .catch(res => {
-                    this.error = "Server error occurred";
-                });
-        },
         resetForm: function () {
             if (this.preVM == null) {
                 this.vm = {
@@ -119,9 +93,11 @@ Vue.component("show-drives", {
             this.vm = JSON.parse(JSON.stringify(this.preVM))
         },
         remove: function(drive){
-            let newArray = this.vm.drives.filter(el => el !== drive);
-            this.vm.drives = JSON.parse(JSON.stringify(newArray));
-            this.$forceUpdate();
+        	axios.delete("/rest/drive/" + this.organization.name + "/" + drive.name)
+            .then(res => {
+                alert("Drive successfully deleted");
+                this.$router.push("/vm/" + this.organization.name + "/" + this.vm.name, e => {this.$router.go();}, e => {this.$router.go();});
+            })
         }
     },
     created() {

@@ -34,12 +34,12 @@ Vue.component("add-organization", {
                 <input type="file" ref="logo" class="form-control-file" id="logo" name="logo" accept="image/png">
               </div>
               
-              <div class="name-group">
+              <div class="form-label-group">
                 <label for="name">Organization name</label>
                 <input type="text" id="name" name="name" v-model="name" required>
               </div>
               
-              <div class="description-group">
+              <div class="form-label-group">
                 <label for="desc">Organization description</label>
                 <textarea rows="4" cols="50" id="desc" name="desc" form="add-form" v-model="description" placeholder="Enter description.." required></textarea>
               </div>

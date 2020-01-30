@@ -73,7 +73,7 @@ Vue.component("add-user", {
             <div v-if="!preUser || (preUser && preUser.role != 'superAdmin')" class="form-select">
 
                 <select id="role" v-model="user.role" class="form-control" required>
-                    <option value="" disabled selected>Select a role</option>
+                    <option value="null" disabled selected>Select a role</option>
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                 </select>
@@ -81,7 +81,7 @@ Vue.component("add-user", {
             
             <div v-if="activeUser && activeUser.role == 'superAdmin'" class="form-select">     
                 <select id="organization" v-model="user.organization" class="form-control" :disabled="mode === 'edit'" required>
-                    <option value="" disabled selected>Select an organization</option>
+                    <option value="null" disabled selected>Select an organization</option>
                     <option v-for="organization in organizations" :value="organization">{{organization.name}}</option>
                 </select>
             </div>
@@ -130,8 +130,12 @@ Vue.component("add-user", {
                 this.error = "Password has to be at lest 8 characters long";
             } else if (this.self && this.$refs.repassword.value !== this.user.password){
                 this.error = "Password not verified.";
+            } else if (this.user.role === null){
+            	this.error = "User needs to have a role";
+            } else if (this.user.organization === null){ 
+            	this.error = "User need to be emplyed at some organization.";
 
-            } else {
+            }else {
 
                 if(this.activeUser && (this.activeUser.role === 'admin' && this.activeUser.organization)){
                     this.user.organization = this.activeUser.organization;

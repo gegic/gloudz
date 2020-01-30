@@ -11,7 +11,7 @@ const router = new VueRouter(
                 component: {template: '<vms></vms>'},
                 meta: {
                     public: false,  // Allow access to even if not logged in
-                    whenLoggedOut: false
+                    whenLoggedOut: false,
                 }
             },
             {
@@ -26,7 +26,7 @@ const router = new VueRouter(
                 path: '/logout',
                 component: {template: '<logout></logout>'},
                 meta: {
-                    public: true,  // Allow access to even if not logged in
+                    public: true,  
                     whenLoggedOut: false
                 }
             },
@@ -125,6 +125,14 @@ router.beforeEach((to, from, next) => {
             next('/login');
         else if (loggedIn && whenLoggedOut)
             next('/');
+        else if (to.path === '/organizations' || to.path === '/categories'){
+        	let activeUser = response.data;
+        	if (activeUser.role !== 'superAdmin'){
+        		next('/');
+        	} else{
+        		next();
+        	}
+        }
         else
             next();
     })
