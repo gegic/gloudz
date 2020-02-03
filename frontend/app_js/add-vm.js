@@ -91,7 +91,7 @@ Vue.component("add-vm", {
             event.preventDefault();
             this.error = null;
 
-            if (this.vm.name.search(/[a-zA-Z][a-zA-Z]+$/) === -1) {
+            if (this.vm.name.search(/[a-zA-Z][a-zA-Z0-9]+$/) === -1) {
                 this.error = "Name cannot contain less than two lettters.";
 
             } 
@@ -99,7 +99,7 @@ Vue.component("add-vm", {
                 this.error = "Virtual machine has to belong to a category";
 
             }
-            else if (this.selectedOrganization === null && this.mode !== 'edit'){
+            else if (this.selectedOrganization === null && this.mode !== 'edit' && this.activeUser.role != 'admin'){
                 this.error = "Virtual machine has to belong to an organization";
 
             }

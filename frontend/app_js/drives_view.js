@@ -11,7 +11,7 @@ Vue.component("drives", {
 <div >
     <sidebar activeTab="drives"></sidebar>
     
-    <div v-for="organization in organizations" class="pt-3" id="page-wrapper">
+    <div v-for="organization in organizations" id="page-wrapper">
         <h1 class="display-4 m-3" v-if="organization.drives.length > 0">{{organization.name}}</h1>
         <card-view-drive v-for="drive in organization.drives" :organization="organization" :drive="drive"></card-view-drive>
     </div>

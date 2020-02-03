@@ -91,8 +91,8 @@ Vue.component("vm", {
             <button class="btn btn-warning shadow btn-lg" @click="working">{{buttonText}}</button>
 
         </div>
-        <add-vm :activeUser="activeUser" v-if="activeUser && activeUser.role != 'user'" mode="edit" :organization="organization" :preVM="vm" @edit="edited"/>
-        <show-drives :activeUser="activeUser" :organization="organization" :preVM="vm" @edit="edited"></show-drives>
+        <add-vm :activeUser="activeUser && activeUser.role != 'user'" v-if="activeUser && activeUser.role != 'user'" mode="edit" :organization="organization" :preVM="vm" @edit="edited"/>
+        <show-drives :activeUser="activeUser" v-if="activeUser && activeUser.role != 'user'" :organization="organization" :preVM="vm" @edit="edited"></show-drives>
         <show-activities :activeUser="activeUser" :organization="organization" :preVM="vm" @edit="edited"/>
         <delete-vm v-if="activeUser && activeUser.role != 'user'" :vm="vm" :organization="organization"/>
     </div>

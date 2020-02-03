@@ -17,6 +17,9 @@ Vue.component("card-view-vm", {
       <div class="card-body">
         <h5 class="card-title">{{ vm.name }}</h5>
         <p class="card-text">Category {{vm.category.name}}.</p>
+        <p class="card-text">Ram {{vm.category.ram}}GB.</p>
+		<p class="card-text">Number of cores: {{vm.category.cores}}</p>
+		<p class="card-text">Number of GPU Cores: {{vm.category.gpuCores}}</p>
         <p class="text-muted">More info</p>
       </div>
     </div>

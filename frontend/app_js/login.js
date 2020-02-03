@@ -59,7 +59,7 @@ Vue.component("login", {
 				 .then((response) => {
 					 this.$router.push('/');
 				 })
-				.catch(e => {this.error = e.data.text});
+				.catch(e => {this.error = e.response.data.text});
 
 		}
 	}

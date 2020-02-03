@@ -10,7 +10,6 @@ Vue.component("delete-category", {
     props: ["category"],
     watch: {
         showModal: function () {
-            this.resetForm();
             if (this.showModal) {
                 document.documentElement.style.overflow = 'hidden';
                 return;
@@ -27,6 +26,9 @@ Vue.component("delete-category", {
                     alert(res.data.text);
                     this.$router.push("/categories");
                 })
+                .catch(err => {
+                	alert(err.response.data.text);
+                });
         }
     },
     template: `

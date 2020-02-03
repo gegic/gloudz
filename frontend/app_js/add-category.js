@@ -95,7 +95,7 @@ Vue.component("add-category", {
             event.preventDefault();
             this.error = null;
 
-            if (this.category.name.search(/[a-zA-Z][a-zA-Z]+$/) === -1) {
+            if (this.category.name.search(/[a-zA-Z][a-zA-Z0-9]+$/) === -1) {
                 this.error = "Name cannot contain less than two lettters.";
             } else if (this.category.cores < 1) {
                 this.error = "Category cannot contain less than one core";

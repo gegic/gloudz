@@ -13,7 +13,9 @@ public class VirtualMachineDeserializer implements JsonDeserializer<VirtualMachi
 
     @Override
     public VirtualMachine deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
+    	
+    	JsonObject jsonObject = jsonElement.getAsJsonObject();
+    	if (jsonObject.isJsonNull() || jsonObject.entrySet().size() == 0) return null;
         VirtualMachine added = new VirtualMachine(
                 jsonObject.get("name").getAsString()
         );

@@ -34,7 +34,7 @@ Vue.component("profile", {
             <h2>{{user.role}}</h2>
             <h2 v-if="user.role != 'superAdmin'">Works at {{user.organization.name}}</h2>
         </div>
-        <add-user mode="edit" self="true" :activeUser="user" :preUser="user" @edit="edited"/>
+        <add-user mode="edit" self="true" :activeUser="user" :preUser="user" @edit="edited" profile/>
     </div>
 </div>
 `

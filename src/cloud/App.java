@@ -47,7 +47,7 @@ public class App {
 			User got = application.findUser(u);
 			if(got == null){
 				res.status(401);
-				return g.toJson(new ReturnJSON("", "User with this credentials not found"));
+				return g.toJson(new ReturnJSON("", "User with these credentials not found"));
 			}
 			req.session().attribute("logged", got);
 			return g.toJson(got);
@@ -214,7 +214,7 @@ public class App {
 		delete("/rest/category/:name", (req, res) -> {
 			if(!application.removeCategory(req.params("name"))){
 				res.status(400);
-				return g.toJson(new ReturnJSON("", "Specified category doesn't exist"));
+				return g.toJson(new ReturnJSON("", "Couldn't delete the specified category"));
 			}
 			application.saveAll(g);
 			return g.toJson(new ReturnJSON("", "Category successfully deleted"));

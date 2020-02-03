@@ -58,7 +58,7 @@ Vue.component("monthly-bill", {
             
                                 <td><input type="date" class="form-control" :value="getDate(activity.resource.endingDate)" disabled></td>
                                 <td><input type="number" class="form-control" v-bind:value="getTime(activity.resource.endingDate)" disabled></td>
-                                <td>{{activity.price}}</td>
+                                <td>{{activity.price | round}}</td>
                             </tr>
                         </table>
                     </td></tr>
@@ -75,7 +75,7 @@ Vue.component("monthly-bill", {
                                 <td>{{drive.resource.capacity}}</td>
             
                                 <td>{{drive.resource.type}}</td>
-                                <td>{{drive.price}}</td>
+                                <td>{{drive.price | round}}</td>
                                         
                             </tr>
                         </table>
@@ -88,7 +88,7 @@ Vue.component("monthly-bill", {
                     <tr>
                         <th>{{container.machine.resource.name}}</th>
                         <th>{{container.machine.resource.category.name}}</th>
-                        <th>{{container.machine.price}}</th>
+                        <th>{{container.machine.price | round}}</th>
                     </tr>
                  </tbody>
                  
@@ -98,7 +98,7 @@ Vue.component("monthly-bill", {
               
           </div>
           <div class="modal-footer">
-            <p class="lead">Total price: {{totalPrice}}</p>
+            <p class="lead">Total price: {{totalPrice | round}}</p>
             <button type="button" class="btn btn-secondary" v-on:click="showModal = false">Close</button>
           </div>
 
@@ -107,6 +107,13 @@ Vue.component("monthly-bill", {
 </div>
 </div>
 `,
+
+
+filters: {
+  round: function (value) {
+    return value.toFixed(2);
+  }
+},
     computed: {
         currentDate: function () {
             let d = new Date(),

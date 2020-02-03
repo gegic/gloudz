@@ -27,6 +27,9 @@ Vue.component("delete-user", {
                     alert(res.data.text);
                     this.$router.push("/users");
                 })
+                .catch(err => {
+                	alert(err.response.data.text);
+                });
         }
     },
     template: `
