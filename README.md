@@ -1,6 +1,8 @@
 # GloudZ
-Web Programiranje
 
-GloudZ is a web application which simulates Cloud Service Provider platforms. Developed to ensure quick user interaction with simple interface.
+GloudZ is a Cloud Service Provider platform application. It was developed as an assignment for the Web Programming course in the fifth semester at the University of Novi Sad.
 
-It was developed in Vue.js and lightweight Java Spark Framework, ensuring that this single page application enables solid performance combined with various dynamical commands user is able to run through the intuitive interface.
+## Tech stack
+
+* Vue.js along with Bootstrap
+* Spark Web Framework for Java
